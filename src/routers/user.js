@@ -4,9 +4,11 @@ const auth = require('../middleware/auth')
 const router = new express.Router()
 
 router.post('/users/singup', async (req, res) => {
-    const user = new User(req.body)
-
     try {
+        if(req.body.role){
+            throw new Error('You can not choose role!')
+        }
+        const user = new User(req.body)    
         await user.save()
         // sendWelcomeEmail(user.email, user.name)
         const token = await user.generateAuthToken()
@@ -79,5 +81,40 @@ router.delete('/users/me', auth, async (req, res) => {
         res.status(500).send()
     }
 })
+
+router.post('/users/wishlist', auth, async (req, res) => {
+    try {
+        if(!req.body.word) {
+            throw new Error('No word !')
+        }
+        if (req.user.wishlist.includes(req.body.word)) {
+            throw new Error()
+        }
+        req.user.wishlist.push(req.body.word)
+        await req.user.save()
+        res.send(req.user.wishlist)
+    } catch (e) {
+        res.status(400).send()
+    }
+})
+
+router.delete('/users/wishlist', auth, async (req, res) => {
+    try {
+        if(!req.body.word) {
+            throw new Error('No word !')
+        }
+        if (!req.user.wishlist.includes(req.body.word)) {
+            throw new Error()
+        }
+        req.user.wishlist = req.user.wishlist.filter((word) => {
+            return word != req.body.word
+        })
+        await req.user.save()
+        res.send(req.user.wishlist)
+    } catch (e) {
+        res.status(400).send()
+    }
+})
+
 
 module.exports = router

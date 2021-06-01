@@ -61,6 +61,12 @@ const userSchema = new mongoose.Schema({
     wishlist: {
         type: Array,
         trim: true
+    },
+    role: {
+        type: String,
+        required: true,
+        trim: true,
+        default: 'User'
     }
 }, {
     timestamps: true

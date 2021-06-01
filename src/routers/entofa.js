@@ -22,7 +22,7 @@ router.delete('/entofa', async (req, res) => {
     }
 })
 
-router.post('/entofa/search', async (req, res) => {
+router.get('/entofa/search', async (req, res) => {
     try {
         const words = await EnToFa.find({en: { '$regex': req.query.q }}, 'en fa', { sort: {en: 1}, limit: parseInt(req.query.limit)})
         res.send(words)

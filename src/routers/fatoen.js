@@ -22,7 +22,7 @@ router.delete('/fatoen', async (req, res) => {
     }
 })
 
-router.post('/fatoen/search', async (req, res) => {
+router.get('/fatoen/search', async (req, res) => {
     try {
         const words = await FaToEn.find({fa: { '$regex': req.query.q }}, 'en fa', { sort: {fa: 1}, limit: parseInt(req.query.limit)})
         res.send(words)
